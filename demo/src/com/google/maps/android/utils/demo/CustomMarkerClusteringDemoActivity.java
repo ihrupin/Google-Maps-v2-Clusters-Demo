@@ -2,6 +2,7 @@ package com.google.maps.android.utils.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
@@ -99,9 +101,41 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
     @Override
     public boolean onClusterClick(Cluster<Person> cluster) {
+        double minLat = 0;
+        double minLng = 0;
+        double maxLat = 0;
+        double maxLng = 0;
+        for(Person p : cluster.getItems()){
+            double lat = p.getPosition().latitude;
+            double lng = p.getPosition().longitude;
+            if(minLat == 0 & minLng ==0 & maxLat ==0& maxLng == 0){
+                minLat = maxLat = lat;
+                minLng = maxLng = lng;
+            }
+            if(lat > maxLat){
+                maxLat = lat;
+            }
+            if(lng > maxLng){
+                maxLng = lng;
+            }
+            if(lat < minLat){
+                minLat = lat;
+            }
+            if(lng < minLng){
+                minLng = lng;
+            }
+        }
         // Show a toast with some info when the cluster is clicked.
         String firstName = cluster.getItems().iterator().next().name;
         Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
+        Log.i("Igor", "minLat=" + minLat + ", minLng=" + minLng + ", maxLat=" + maxLat + ", maxLng=" + maxLng);
+        LatLng sw = new LatLng(minLat, minLng);
+        LatLng ne = new LatLng(maxLat, maxLng);
+        LatLngBounds bounds = new LatLngBounds(sw, ne);
+        Log.i("Igor", "bounds=" + bounds);
+        
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
+        
         return true;
     }
 
