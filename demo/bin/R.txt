@@ -154,9 +154,6 @@ int layout places_demo 0x7f030005
 int layout text_bubble 0x7f030006
 int raw coffees 0x7f040000
 int raw gtm_analytics 0x7f040001
-int raw medicare 0x7f040002
-int raw police 0x7f040003
-int raw radar_search 0x7f040004
 int string accept 0x7f060002
 int string app_name 0x7f060023
 int string attrib_format 0x7f060028

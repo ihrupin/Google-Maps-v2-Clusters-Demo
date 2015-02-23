@@ -10,8 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.utils.demo.model.MyItem;
-import com.google.maps.android.utils.demo.model.Person;
+import com.google.maps.android.utils.demo.model.Coffee;
 
 public class CoffeesReader {
 
@@ -22,15 +21,15 @@ public class CoffeesReader {
      */
     private static final String REGEX_INPUT_BOUNDARY_BEGINNING = "\\A";
 
-    public List<Person> read(InputStream inputStream) throws JSONException {
-        List<Person> items = new ArrayList<Person>();
+    public List<Coffee> read(InputStream inputStream) throws JSONException {
+        List<Coffee> items = new ArrayList<Coffee>();
         String json = new Scanner(inputStream).useDelimiter(REGEX_INPUT_BOUNDARY_BEGINNING).next();
         JSONArray array = new JSONArray(json);
         for (int i = 0; i < array.length(); i++) {
             JSONObject object = array.getJSONObject(i);
             double lat = object.getDouble("lat");
             double lng = object.getDouble("lng");
-            items.add(new Person(new LatLng(lat, lng), "Starbucks", R.drawable.pin_poi_coffee));
+            items.add(new Coffee(new LatLng(lat, lng), "Starbucks", R.drawable.pin_poi_coffee));
         }
         return items;
     }

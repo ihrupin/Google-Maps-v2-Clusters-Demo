@@ -1,10 +1,16 @@
 package com.google.maps.android.utils.demo;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.json.JSONException;
+
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -21,21 +27,13 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
-import com.google.maps.android.utils.demo.model.MyItem;
-import com.google.maps.android.utils.demo.model.Person;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.json.JSONException;
+import com.google.maps.android.utils.demo.model.Coffee;
 
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
  */
-public class CustomMarkerClusteringDemoActivity extends FragmentActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
-    private ClusterManager<Person> mClusterManager;
+public class CustomMarkerClusteringDemoActivity extends FragmentActivity implements ClusterManager.OnClusterClickListener<Coffee>, ClusterManager.OnClusterInfoWindowClickListener<Coffee>, ClusterManager.OnClusterItemClickListener<Coffee>, ClusterManager.OnClusterItemInfoWindowClickListener<Coffee> {
+    private ClusterManager<Coffee> mClusterManager;
     private Random mRandom = new Random(1984);
     
     protected GoogleMap mMap;
@@ -77,14 +75,14 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
      * Draws profile photos inside markers (using IconGenerator).
      * When there are multiple people in the cluster, draw multiple photos (using MultiDrawable).
      */
-    private class PersonRenderer extends DefaultClusterRenderer<Person> {
+    private class CoffeeRenderer extends DefaultClusterRenderer<Coffee> {
         private final IconGenerator mIconGenerator = new IconGenerator(getApplicationContext());
         private final IconGenerator mClusterIconGenerator = new IconGenerator(getApplicationContext());
         private final ImageView mImageView;
         private final ImageView mClusterImageView;
         private final int mDimension;
 
-        public PersonRenderer() {
+        public CoffeeRenderer() {
             super(getApplicationContext(), getMap(), mClusterManager);
 
             View multiProfile = getLayoutInflater().inflate(R.layout.multi_profile, null);
@@ -100,7 +98,7 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterItemRendered(Person person, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(Coffee person, MarkerOptions markerOptions) {
             // Draw a single person.
             // Set the info window to show their name.
             mImageView.setImageResource(person.profilePhoto);
@@ -109,14 +107,14 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
         }
 
         @Override
-        protected void onBeforeClusterRendered(Cluster<Person> cluster, MarkerOptions markerOptions) {
+        protected void onBeforeClusterRendered(Cluster<Coffee> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
             List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
 
-            for (Person p : cluster.getItems()) {
+            for (Coffee p : cluster.getItems()) {
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
                 Drawable drawable = getResources().getDrawable(p.profilePhoto);
@@ -139,12 +137,12 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
     }
 
     @Override
-    public boolean onClusterClick(Cluster<Person> cluster) {
+    public boolean onClusterClick(Cluster<Coffee> cluster) {
         double minLat = 0;
         double minLng = 0;
         double maxLat = 0;
         double maxLng = 0;
-        for(Person p : cluster.getItems()){
+        for(Coffee p : cluster.getItems()){
             double lat = p.getPosition().latitude;
             double lng = p.getPosition().longitude;
             if(minLat == 0 & minLng ==0 & maxLat ==0& maxLng == 0){
@@ -175,26 +173,26 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
     }
 
     @Override
-    public void onClusterInfoWindowClick(Cluster<Person> cluster) {
+    public void onClusterInfoWindowClick(Cluster<Coffee> cluster) {
         // Does nothing, but you could go to a list of the users.
     }
 
     @Override
-    public boolean onClusterItemClick(Person item) {
+    public boolean onClusterItemClick(Coffee item) {
         // Does nothing, but you could go into the user's profile page, for example.
         return false;
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(Person item) {
+    public void onClusterItemInfoWindowClick(Coffee item) {
         // Does nothing, but you could go into the user's profile page, for example.
     }
 
     protected void startDemo() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.780633, -122.396788), 14f));
 
-        mClusterManager = new ClusterManager<Person>(this, getMap());
-        mClusterManager.setRenderer(new PersonRenderer());
+        mClusterManager = new ClusterManager<Coffee>(this, getMap());
+        mClusterManager.setRenderer(new CoffeeRenderer());
         getMap().setOnCameraChangeListener(mClusterManager);
         getMap().setOnMarkerClickListener(mClusterManager);
         getMap().setOnInfoWindowClickListener(mClusterManager);
@@ -210,7 +208,7 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
     private void addItems() {
         try{
             InputStream inputStream = getResources().openRawResource(R.raw.coffees);
-            List<Person> items = new CoffeesReader().read(inputStream);
+            List<Coffee> items = new CoffeesReader().read(inputStream);
             mClusterManager.addItems(items);
         }catch(JSONException e){
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
