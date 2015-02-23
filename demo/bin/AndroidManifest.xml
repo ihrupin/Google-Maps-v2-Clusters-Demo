@@ -40,23 +40,13 @@
                 android:value="AIzaSyAgeMHmvUQww2xFwB9hBzsUBFwgfZgNcfQ"/>
 
         <activity
-                android:name=".MainActivity"
+                android:name=".CustomMarkerClusteringDemoActivity"
                 android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".PolyDecodeDemoActivity"/>
-        <activity android:name=".IconGeneratorDemoActivity"/>
-        <activity android:name=".DistanceDemoActivity"/>
-        <activity android:name=".ClusteringDemoActivity"/>
-        <activity android:name=".BigClusteringDemoActivity"/>
-        <activity android:name=".CustomMarkerClusteringDemoActivity"/>
-        <activity android:name=".TileProviderAndProjectionDemo"/>
-        <activity android:name=".HeatmapsDemoActivity"/>
-        <activity android:name=".HeatmapsPlacesDemoActivity"/>
 
     </application>
 

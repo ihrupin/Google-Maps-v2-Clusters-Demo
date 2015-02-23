@@ -2,6 +2,8 @@ package com.google.maps.android.utils.demo;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -30,9 +34,44 @@ import org.json.JSONException;
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
  */
-public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
+public class CustomMarkerClusteringDemoActivity extends FragmentActivity implements ClusterManager.OnClusterClickListener<Person>, ClusterManager.OnClusterInfoWindowClickListener<Person>, ClusterManager.OnClusterItemClickListener<Person>, ClusterManager.OnClusterItemInfoWindowClickListener<Person> {
     private ClusterManager<Person> mClusterManager;
     private Random mRandom = new Random(1984);
+    
+    protected GoogleMap mMap;
+
+    protected int getLayoutId() {
+        return R.layout.map;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(getLayoutId());
+        setUpMapIfNeeded();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpMapIfNeeded();
+    }
+
+    private void setUpMapIfNeeded() {
+        if (mMap != null) {
+            return;
+        }
+        mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
+        if (mMap != null) {
+            startDemo();
+        }
+    }
+
+    protected GoogleMap getMap() {
+        setUpMapIfNeeded();
+        return mMap;
+    }
+    
 
     /**
      * Draws profile photos inside markers (using IconGenerator).
@@ -125,14 +164,10 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
                 minLng = lng;
             }
         }
-        // Show a toast with some info when the cluster is clicked.
-        String firstName = cluster.getItems().iterator().next().name;
-        Toast.makeText(this, cluster.getSize() + " (including " + firstName + ")", Toast.LENGTH_SHORT).show();
-        Log.i("Igor", "minLat=" + minLat + ", minLng=" + minLng + ", maxLat=" + maxLat + ", maxLng=" + maxLng);
+
         LatLng sw = new LatLng(minLat, minLng);
         LatLng ne = new LatLng(maxLat, maxLng);
         LatLngBounds bounds = new LatLngBounds(sw, ne);
-        Log.i("Igor", "bounds=" + bounds);
         
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50));
         
@@ -155,7 +190,6 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
         // Does nothing, but you could go into the user's profile page, for example.
     }
 
-    @Override
     protected void startDemo() {
         getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.780633, -122.396788), 14f));
 

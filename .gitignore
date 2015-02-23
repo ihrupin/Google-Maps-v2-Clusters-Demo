@@ -9,3 +9,5 @@ library/bin
 library/gen
 project.properties
 .DS_Store
+.bin
+gen
