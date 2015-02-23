@@ -61,7 +61,7 @@ public class IconGenerator {
         mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
         mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
         mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
-        setStyle(STYLE_DEFAULT);
+        setStyle(STYLE_TRANSPARENT);
     }
 
     /**
@@ -262,6 +262,7 @@ public class IconGenerator {
     public static final int STYLE_GREEN = 5;
     public static final int STYLE_PURPLE = 6;
     public static final int STYLE_ORANGE = 7;
+    public static final int STYLE_TRANSPARENT = 8;
 
     private static int getStyleColor(int style) {
         switch (style) {
@@ -269,6 +270,8 @@ public class IconGenerator {
             case STYLE_DEFAULT:
             case STYLE_WHITE:
                 return 0xffffffff;
+            case STYLE_TRANSPARENT:
+                return 0x00000000;
             case STYLE_RED:
                 return 0xffcc0000;
             case STYLE_BLUE:
@@ -287,6 +290,7 @@ public class IconGenerator {
             default:
             case STYLE_DEFAULT:
             case STYLE_WHITE:
+            case STYLE_TRANSPARENT:
                 return R.style.Bubble_TextAppearance_Dark;
             case STYLE_RED:
             case STYLE_BLUE:

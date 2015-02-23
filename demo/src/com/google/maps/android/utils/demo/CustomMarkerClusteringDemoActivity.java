@@ -15,11 +15,15 @@ import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
+import com.google.maps.android.utils.demo.model.MyItem;
 import com.google.maps.android.utils.demo.model.Person;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import org.json.JSONException;
 
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
@@ -81,7 +85,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
             MultiDrawable multiDrawable = new MultiDrawable(profilePhotos);
             multiDrawable.setBounds(0, 0, width, height);
 
-            mClusterImageView.setImageDrawable(multiDrawable);
+            mClusterImageView.setImageDrawable(getResources().getDrawable(R.drawable.pin_poi_coffee));
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
@@ -119,7 +123,7 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
 
     @Override
     protected void startDemo() {
-        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(51.503186, -0.126446), 9.5f));
+        getMap().moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.780633, -122.396788), 14f));
 
         mClusterManager = new ClusterManager<Person>(this, getMap());
         mClusterManager.setRenderer(new PersonRenderer());
@@ -136,32 +140,13 @@ public class CustomMarkerClusteringDemoActivity extends BaseDemoActivity impleme
     }
 
     private void addItems() {
-        // http://www.flickr.com/photos/sdasmarchives/5036248203/
-        mClusterManager.addItem(new Person(position(), "Walter", R.drawable.walter));
-
-        // http://www.flickr.com/photos/usnationalarchives/4726917149/
-        mClusterManager.addItem(new Person(position(), "Gran", R.drawable.gran));
-
-        // http://www.flickr.com/photos/nypl/3111525394/
-        mClusterManager.addItem(new Person(position(), "Ruth", R.drawable.ruth));
-
-        // http://www.flickr.com/photos/smithsonian/2887433330/
-        mClusterManager.addItem(new Person(position(), "Stefan", R.drawable.stefan));
-
-        // http://www.flickr.com/photos/library_of_congress/2179915182/
-        mClusterManager.addItem(new Person(position(), "Mechanic", R.drawable.mechanic));
-
-        // http://www.flickr.com/photos/nationalmediamuseum/7893552556/
-        mClusterManager.addItem(new Person(position(), "Yeats", R.drawable.yeats));
-
-        // http://www.flickr.com/photos/sdasmarchives/5036231225/
-        mClusterManager.addItem(new Person(position(), "John", R.drawable.john));
-
-        // http://www.flickr.com/photos/anmm_thecommons/7694202096/
-        mClusterManager.addItem(new Person(position(), "Trevor the Turtle", R.drawable.turtle));
-
-        // http://www.flickr.com/photos/usnationalarchives/4726892651/
-        mClusterManager.addItem(new Person(position(), "Teach", R.drawable.teacher));
+        try{
+            InputStream inputStream = getResources().openRawResource(R.raw.coffees);
+            List<Person> items = new CoffeesReader().read(inputStream);
+            mClusterManager.addItems(items);
+        }catch(JSONException e){
+            Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
+        }
     }
 
     private LatLng position() {
