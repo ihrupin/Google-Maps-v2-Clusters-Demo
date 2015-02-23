@@ -32,9 +32,8 @@ import com.google.maps.android.utils.demo.model.Coffee;
 /**
  * Demonstrates heavy customisation of the look of rendered clusters.
  */
-public class CustomMarkerClusteringDemoActivity extends FragmentActivity implements ClusterManager.OnClusterClickListener<Coffee>, ClusterManager.OnClusterInfoWindowClickListener<Coffee>, ClusterManager.OnClusterItemClickListener<Coffee>, ClusterManager.OnClusterItemInfoWindowClickListener<Coffee> {
+public class CustomMarkerClusteringDemoActivity extends FragmentActivity implements ClusterManager.OnClusterClickListener<Coffee>, ClusterManager.OnClusterItemClickListener<Coffee> {
     private ClusterManager<Coffee> mClusterManager;
-    private Random mRandom = new Random(1984);
     
     protected GoogleMap mMap;
 
@@ -103,7 +102,7 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
             // Set the info window to show their name.
             mImageView.setImageResource(person.profilePhoto);
             Bitmap icon = mIconGenerator.makeIcon();
-            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon)).title(person.name);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
 
         @Override
@@ -173,19 +172,9 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
     }
 
     @Override
-    public void onClusterInfoWindowClick(Cluster<Coffee> cluster) {
-        // Does nothing, but you could go to a list of the users.
-    }
-
-    @Override
     public boolean onClusterItemClick(Coffee item) {
         // Does nothing, but you could go into the user's profile page, for example.
         return false;
-    }
-
-    @Override
-    public void onClusterItemInfoWindowClick(Coffee item) {
-        // Does nothing, but you could go into the user's profile page, for example.
     }
 
     protected void startDemo() {
@@ -197,9 +186,7 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
         getMap().setOnMarkerClickListener(mClusterManager);
         getMap().setOnInfoWindowClickListener(mClusterManager);
         mClusterManager.setOnClusterClickListener(this);
-        mClusterManager.setOnClusterInfoWindowClickListener(this);
         mClusterManager.setOnClusterItemClickListener(this);
-        mClusterManager.setOnClusterItemInfoWindowClickListener(this);
 
         addItems();
         mClusterManager.cluster();
@@ -213,13 +200,5 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
         }catch(JSONException e){
             Toast.makeText(this, "Problem reading list of markers.", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private LatLng position() {
-        return new LatLng(random(51.6723432, 51.38494009999999), random(0.148271, -0.3514683));
-    }
-
-    private double random(double min, double max) {
-        return mRandom.nextDouble() * (max - min) + min;
     }
 }
