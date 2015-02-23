@@ -1,4 +1,4 @@
-package com.google.maps.android.utils.demo.model;
+package com.google.maps.android.utils.demo;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.clustering.ClusterItem;

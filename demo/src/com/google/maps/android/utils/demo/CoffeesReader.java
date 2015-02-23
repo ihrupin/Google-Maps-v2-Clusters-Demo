@@ -10,7 +10,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.google.maps.android.utils.demo.model.Coffee;
 
 public class CoffeesReader {
 
