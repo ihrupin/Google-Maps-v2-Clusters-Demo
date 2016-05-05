@@ -103,7 +103,7 @@ public class CustomMarkerClusteringDemoActivity extends FragmentActivity impleme
 
         @Override
         protected void onBeforeClusterRendered(Cluster<Coffee> cluster, MarkerOptions markerOptions) {
-            mClusterImageView.setImageDrawable(getResources().getDrawable(R.drawable.pin_poi_coffee));
+            mClusterImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_coffee));
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
             markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }

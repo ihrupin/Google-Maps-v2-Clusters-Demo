@@ -28,7 +28,7 @@ public class CoffeesReader {
             JSONObject object = array.getJSONObject(i);
             double lat = object.getDouble("lat");
             double lng = object.getDouble("lng");
-            items.add(new Coffee(new LatLng(lat, lng), "Starbucks", R.drawable.pin_poi_coffee));
+            items.add(new Coffee(new LatLng(lat, lng), "Starbucks", R.drawable.ic_coffee));
         }
         return items;
     }
