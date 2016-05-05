@@ -1,0 +1,28 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.hrupin.clusters.demo"
+        minSdkVersion 21
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0.0.1"
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file('../keystore/debug.keystore.jks')
+            storePassword "android"
+            keyAlias "android"
+            keyPassword "android"
+        }
+    }
+}
+
+dependencies {
+    compile project(':library')
+    compile 'com.google.android.gms:play-services-maps:8.4.0'
+}
